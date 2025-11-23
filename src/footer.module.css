@@ -1,0 +1,9 @@
+.link1{
+    color: white;
+    margin: 0.3rem 0;
+    cursor: pointer;
+    text-decoration: none;
+  &:hover {
+    color: yellow;
+  }
+}

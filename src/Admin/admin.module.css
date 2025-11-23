@@ -1,0 +1,17 @@
+.link1 {
+  text-decoration: none;
+  color: #d3d3d3; /* light grey */
+  padding: 24px 18px;
+  font-size: 1.1rem;
+  background-color: darkblue;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+
+
+&:hover {
+  background-color: #d3d3d3;
+  color: #ffffff;
+  padding-left: 25px;
+}
+
+}

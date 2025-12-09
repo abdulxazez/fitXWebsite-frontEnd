@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+// Registeration.js - SIMPLIFIED
+import React, { useRef, useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -6,11 +7,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addUser } from "./service/api";
 import { useNavigate } from "react-router-dom";
+import { UserQuantityContext } from "./Context/UserQuantityContext";
 
 const schema = z.object({
   firstName: z.string().min(1, { message: "Enter First Name" }),
   lastName: z.string().min(1, { message: "Enter Last Name" }),
-  userName: z.string().min(1, { message: "Enter Username" }),
+  username: z.string().min(1, { message: "Enter Username" }),
   password: z.string().min(1, { message: "Enter Password" }),
   email: z.string().min(1, { message: "Enter Email" }).email("Invalid Email"),
 });
@@ -23,7 +25,9 @@ const StyledA = styled.a`
 `;
 
 function Registeration() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { addUserToCount } = useContext(UserQuantityContext);
+  
   const {
     register,
     handleSubmit,
@@ -33,22 +37,29 @@ function Registeration() {
     resolver: zodResolver(schema),
   });
 
-  const firstNameref = useRef(null);
-  const secondNameref = useRef(null);
-  const usernameRef = useRef(null);
-  const passwordRef = useRef(null);
-  const emailRef = useRef(null);
-
   const onSubmit = async (data) => {
-    try{
-        console.log("Sending to backend: ", data)
-      await addUser(data)
-      reset()
-      console.log("Data sent succesfully")
-      navigate("/")
+    try {
+      console.log("Sending to backend: ", data);
+      
+      // Send to backend
+      await addUser(data);
+      
+      console.log("✅ User registered in database");
+      
+      // Update the user count in context
+      addUserToCount();
+      console.log("✅ User count incremented in context");
+      
+      // Reset form
+      reset();
+      
+      // Show success and redirect
+      alert("Registration successful! User count updated.");
+      navigate("/loginPage");
       
     } catch (error) {
-      console.log(error)
+      console.log("❌ Registration error:", error);
+      alert("Registration failed. Please try again.");
     } 
   };
 
@@ -60,89 +71,60 @@ function Registeration() {
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* First Name */}
+          {/* Form fields remain the same */}
           <div className="mb-3">
             <label className="form-label fw-semibold">First Name</label>
             <input
-              ref={firstNameref}
               type="text"
               className={`form-control ${errors.firstName ? "is-invalid" : ""}`}
               placeholder="Enter First Name"
               {...register("firstName")}
             />
-            {errors.firstName && (
-              <div className="invalid-feedback text-center">
-                {errors.firstName.message}
-              </div>
-            )}
+            {errors.firstName && <div className="invalid-feedback text-center">{errors.firstName.message}</div>}
           </div>
 
-          {/* Last Name */}
           <div className="mb-3">
             <label className="form-label fw-semibold">Last Name</label>
             <input
-              ref={secondNameref}
               type="text"
               className={`form-control ${errors.lastName ? "is-invalid" : ""}`}
               placeholder="Enter Last Name"
               {...register("lastName")}
             />
-            {errors.lastName && (
-              <div className="invalid-feedback text-center">
-                {errors.lastName.message}
-              </div>
-            )}
+            {errors.lastName && <div className="invalid-feedback text-center">{errors.lastName.message}</div>}
           </div>
 
-          {/* Username */}
           <div className="mb-3">
             <label className="form-label fw-semibold">Username</label>
             <input
-              ref={usernameRef}
               type="text"
-              className={`form-control ${errors.userName ? "is-invalid" : ""}`}
+              className={`form-control ${errors.username ? "is-invalid" : ""}`}
               placeholder="Choose a Username"
-              {...register("userName")}
+              {...register("username")}
             />
-            {errors.userName && (
-              <div className="invalid-feedback text-center">
-                {errors.userName.message}
-              </div>
-            )}
+            {errors.username && <div className="invalid-feedback text-center">{errors.username.message}</div>}
           </div>
 
-          {/* Password */}
           <div className="mb-3">
             <label className="form-label fw-semibold">Password</label>
             <input
-              ref={passwordRef}
               type="password"
               className={`form-control ${errors.password ? "is-invalid" : ""}`}
               placeholder="Enter Password"
               {...register("password")}
             />
-            {errors.password && (
-              <div className="invalid-feedback text-center">
-                {errors.password.message}
-              </div>
-            )}
+            {errors.password && <div className="invalid-feedback text-center">{errors.password.message}</div>}
           </div>
 
-          {/* Email */}
           <div className="mb-4">
             <label className="form-label fw-semibold">Email</label>
             <input
-              ref={emailRef}
               type="email"
               className={`form-control ${errors.email ? "is-invalid" : ""}`}
               placeholder="Enter Email Address"
               {...register("email")}
             />
-            {errors.email && (
-              <div className="invalid-feedback text-center">
-                {errors.email.message}
-              </div>
-            )}
+            {errors.email && <div className="invalid-feedback text-center">{errors.email.message}</div>}
           </div>
 
           <div className="text-center mb-3">
@@ -155,7 +137,6 @@ function Registeration() {
             <button
               type="submit"
               className="btn btn-dark w-100 fw-bold py-2 shadow-sm"
-              style={{ transition: "0.3s" }}
             >
               Register
             </button>

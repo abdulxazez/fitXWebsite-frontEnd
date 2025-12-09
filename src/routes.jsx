@@ -8,16 +8,15 @@ import LoginPage from "./LoginPage";
 import Registeration from "./Registeration";
 import Shopping from "./Shopping";
 import AdminPortal from "./Admin/AdminPortal";
-import Dashboard from "./Admin/Dashboard";
+import Dashboard from "./Admin/Dashboard"
 import Products from "./Admin/Product/Products";
 import Orders from "./Admin/Orders";
 import Customers from "./Admin/Customers";
 import Payments from "./Admin/Payments";
-
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // Layout with NavBar + Footer + Outlet
+    element: <App/>, // Layout with NavBar + Footer + Outlet
     children: [
       { index: true, element: <Home /> },
       { path: "aboutUs", element: <AboutUs /> },

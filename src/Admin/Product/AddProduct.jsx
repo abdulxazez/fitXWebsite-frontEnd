@@ -1,6 +1,8 @@
+import { useState } from "react";
 
 
 function AddProduct({ register, handleSubmit, errors, onSubmit }) {
+  const [value, setValue] = useState(null)
   return (
     <div className="p-4 bg-white rounded shadow-sm">
       <h4 className="text-success mb-3">➕ Add New Product</h4>
@@ -38,10 +40,26 @@ function AddProduct({ register, handleSubmit, errors, onSubmit }) {
           </select>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Product Image</label>
-          <input {...register("image")} type="file" className="form-control" accept="image/*" />
-        </div>
+<div className="mb-3">
+  <label className="form-label">Product Image</label>
+  <input 
+    {...register("image", { 
+      required: "Please select an image file" 
+    })} 
+    type="file" 
+    className="form-control" 
+    accept="image/*"
+    // Important: Add onChange to handle file conversion
+    onChange={(e) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        // Set the file value properly
+        setValue("image", file);
+      }
+    }}
+  />
+  {errors.image && <p className="text-danger">{errors.image.message}</p>}
+</div>        
 
         <button type="submit" className="btn btn-success">Save Product</button>
       </form>

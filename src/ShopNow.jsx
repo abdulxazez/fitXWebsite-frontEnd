@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserQuantityContext } from "./Context/UserQuantityContext";
 import fitLogo from "./assets/FitLogo.jpg";
 import hangingAthlete from "./assets/hangingAthlete.png";
 
 function ShopNow() {
+  const { quantity } = useContext(UserQuantityContext);
+  
   return (
     <div
       className="d-flex flex-column flex-md-row w-100"
@@ -17,8 +20,8 @@ function ShopNow() {
         style={{
           backgroundColor: "black",
           color: "white",
-          flex: 1, // ✅ allows proper resizing
-          minHeight: "40vh", // ✅ visible even on small screens
+          flex: 1,
+          minHeight: "40vh",
         }}
       >
         <h1
@@ -39,6 +42,14 @@ function ShopNow() {
         >
           Shop Now so you can move from Fat to Fit
         </h5>
+        
+        {/* User Count Display */}
+        <div className="mt-3" style={{ border: "2px solid #FFD700", padding: "10px", borderRadius: "8px" }}>
+          <h5 style={{ color: "#FFD700", margin: 0 }}>
+            🏆 Total Members: <span style={{ fontSize: "1.5rem", fontWeight: "bold" }}>{quantity}</span>
+          </h5>
+          <small style={{ color: "#ccc" }}>Join our growing fitness community!</small>
+        </div>
 
         <a
           href="#"
@@ -60,7 +71,7 @@ function ShopNow() {
         style={{
           backgroundColor: "black",
           flex: 1,
-          minHeight: "40vh", // ✅ keeps it visible on small screens
+          minHeight: "40vh",
         }}
       >
         <img
@@ -93,4 +104,3 @@ function ShopNow() {
 }
 
 export default ShopNow;
-

@@ -14,6 +14,8 @@ import Cart from './Cart'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Path from './Path'
 import AdminPortal from './Admin/AdminPortal'
+import FoundCar from './FoundCar'
+import { UserQuantityProvider } from './Context/UserQuantityContext'
 <link rel="stylesheet" href="./App.csss" />
 function App() {
 
@@ -22,21 +24,12 @@ function App() {
     <>
    
 
-          {/* <AdminPortal /> */}
           <NavBar />
-          {/* <Path /> */}
-          {/* <MidPractice /> */}
           
-         {/* <BuyNow /> */}
+         {/* <UserQuantityProvider> */}
          <Outlet />
-         {/* <Footer /> */}
-        {/* <AdminPortal /> */}
-         {/* <Cart /> */}
-         
-        {/* <LoginPage /> */}
-        {/* <AboutUs /> */}
-        {/* <Registeration /> */}
-        {/* <ContactUs/>  */}
+         {/* </UserQuantityProvider> */}
+        
 
        
     </>

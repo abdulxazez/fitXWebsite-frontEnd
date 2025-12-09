@@ -8,6 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postLoginCredentials } from "./service/api.js";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const schema = z.object({
   username: z.string().min(1, { message: "Enter username" }),
@@ -26,6 +27,11 @@ const StyledA = styled.a`
 
 function LoginPage() {
 
+  const [user, setUser] = useState({
+    username: "",
+    password: ""
+  })
+
   const navigate = useNavigate()
   const passwordRef = useRef(null);
   const usernameRef = useRef(null);
@@ -42,7 +48,9 @@ function LoginPage() {
   const onSubmit = async (data) => {
       try{
         console.log("Loging In... ", data)
-        await postLoginCredentials(data)
+        const result = await postLoginCredentials(data)
+        console.log(result.data)
+      
         setTimeout(() => {navigate("/")}, 4000)
       } catch (error) {
         console.log(error)

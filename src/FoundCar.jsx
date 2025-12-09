@@ -1,15 +1,15 @@
 import React from 'react'
-
-function FoundCar({cars, foundCars}) {
+import { UserQuantityContext } from './Context/UserQuantityContext'
+import { useContext } from 'react';
+function FoundCar() {
+  const {quantity, setQuantity} = useContext(UserQuantityContext);
   return (
     <div>
-            {foundCars.map((car) => (
-                <div>
-                    <p>Car: {car.model}</p>
-                </div>
-            ))}
+          <button onClick={()=>{setQuantity(quantity+1)}}>Increment</button>
+          <h6>{quantity}</h6>
+          <button onClick={()=>{setQuantity(quantity+1)}}>Decrement</button>
     </div>
   )
 }
 
-export default FoundCar
+export default FoundCar;

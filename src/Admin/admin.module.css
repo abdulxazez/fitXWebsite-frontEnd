@@ -15,3 +15,346 @@
 }
 
 }
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #e1f5fe;
+  box-shadow: 0 8px 25px rgba(66, 165, 245, 0.15);
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.inputGroup label {
+  color: #2c3e50;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inputGroup label::before {
+  content: "•";
+  color: #3498db;
+  font-size: 16px;
+}
+
+.inputGroup input {
+  padding: 15px 16px;
+  border: 2px solid #e3f2fd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: #3498db;
+  background: linear-gradient(135deg, #ffffff 0%, #e8f4fd 100%);
+  box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
+  transform: translateY(-2px);
+}
+
+.inputGroup input::placeholder {
+  color: #90a4ae;
+  font-weight: 400;
+}
+
+/* Blue gradient border effect on focus */
+.inputGroup:focus-within::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3498db, #2980b9);
+  border-radius: 0 0 8px 8px;
+}
+
+.optionsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0 5px 0;
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #546e7a;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+
+.rememberMe:hover {
+  color: #3498db;
+  background-color: #f0f7ff;
+}
+
+.rememberMe input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #3498db;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.forgotPassword {
+  color: #3498db;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+
+.forgotPassword:hover {
+  color: #2980b9;
+  background-color: #f0f7ff;
+  text-decoration: none;
+}
+
+.loginBtn {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.loginBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.loginBtn:hover::before {
+  left: 100%;
+}
+
+.loginBtn:hover {
+  background: linear-gradient(135deg, #2980b9, #2573a7);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
+}
+
+.loginBtn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+}
+
+.loginBtn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.inputGroup {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.inputGroup:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.inputGroup:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.optionsRow {
+  animation: fadeInUp 0.5s ease-out 0.3s both;
+}
+
+.loginBtn {
+  animation: fadeInUp 0.5s ease-out 0.4s both;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .form {
+    padding: 20px;
+  }
+  
+  .optionsRow {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .inputGroup input {
+    padding: 14px 16px;
+  }
+}
+.input-group label {
+  color: #2c3e50;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.input-group input {
+  padding: 14px 16px;
+  border: 2px solid #e3f2fd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background-color: #f8fbff;
+  color: #2c3e50;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #42a5f5;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.1);
+  transform: translateY(-1px);
+}
+
+.input-group input::placeholder {
+  color: #90a4ae;
+  font-weight: 400;
+}
+
+.options-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #546e7a;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.remember-me:hover {
+  color: #37474f;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #42a5f5;
+  cursor: pointer;
+}
+
+.forgot-password {
+  color: #42a5f5;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: #1976d2;
+  text-decoration: underline;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #42a5f5, #1976d2);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.login-btn:hover {
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(66, 165, 245, 0.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(66, 165, 245, 0.3);
+}
+
+/* Optional: Add some animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.input-group {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.input-group:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.input-group:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.options-row {
+  animation: fadeIn 0.5s ease-out 0.3s both;
+}
+
+.login-btn {
+  animation: fadeIn 0.5s ease-out 0.4s both;
+}

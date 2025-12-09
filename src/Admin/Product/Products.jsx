@@ -2,20 +2,33 @@ import React, { useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SearchProduct from './SearchProduct'
+import UpdateProduct from './UpdateProduct'
 import ViewProducts from './ViewProducts'
 import DeleteProduct  from './DeleteProduct'
 import AddProduct from './AddProduct'
 import { useNavigate } from "react-router-dom";
 import {addingProduct} from "../../service/api";
 
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
 const schema = z.object({
   productName: z.string().min(3, { message: "Please provide at least 3 letters" }),
-  productId: z.string().min(3, {message: "Please enter ProductId"}),
-  quantity: z.string().min(1, {message: "Please Enter Quantity"}),
-  price: z.string().min(4, {message: "Price must be greater than 999"}),
+  productId: z.string().min(3, { message: "Please enter ProductId" }),
+  quantity: z.string().min(1, { message: "Please Enter Quantity" }),
+  price: z.string().min(4, { message: "Price must be greater than 999" }),
   category: z.string().optional(),
-  image: z.any().optional(),
+  image: z
+    .any() // Use 'any' instead of 'instanceof(File)' to handle undefined
+    .refine((file) => {
+      // First check if a file exists
+      if (!file) {
+        throw new Error("Please select an image file.");
+      }
+      return true;
+    })
+   
 });
 
 function Products() {
@@ -33,59 +46,89 @@ function Products() {
   const [deleteInput, setDeleteInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Whey Protein",
-      category: "Supplements",
-      price: 6500,
-      quantity: 30,
-      image: "https://m.media-amazon.com/images/I/61fP5h5PnXL._AC_SL1500_.jpg",
-    },
-    {
-      id: 2,
-      name: "Dumbbell Set",
-      category: "Gym Equipment",
-      price: 12000,
-      quantity: 15,
-      image: "https://m.media-amazon.com/images/I/71wM4mX3hWL._AC_SL1500_.jpg",
-    },
-    {
-      id: 3,
-      name: "FitX Hoodie",
-      category: "Apparel",
-      price: 3200,
-      quantity: 40,
-      image: "https://m.media-amazon.com/images/I/71K7Q4bEGrL._AC_SL1500_.jpg",
-    },
-  ]);
-
  
-  const onSubmitAdd = async (data) => {
-    console.log(data)
-    if (!data.productName) return;
-    const newProduct = {
-      id: products.length + 1,
-      name: data.productName,
-      category: data.category || "Misc",
-      price: Number(data.price) || 0,
-      quantity: Number(data.quantity) || 0,
-      image: data.image?.[0]
-        ? URL.createObjectURL(data.image[0])
-        : "https://via.placeholder.com/100",
-    };
-    setProducts((prev) => [...prev, newProduct]);
+const onSubmitAdd = async (data) => {
+    const token = window.localStorage.getItem('jwtToken');
+    console.log("jwtToken:", token);
+    console.log("Form data:", data);
     
-    setText(`✅ "${data.productName}" added successfully!`);
-try{
-    await addingProduct(data);
-    reset();
-    console.log("data added")
-} catch (error) {
-  console.log("Not Added")
-}
-  };
+    // IMPORTANT: Check what data.image actually is
+    console.log("=== DEBUG Image Info ===");
+    console.log("data.image value:", data.image);
+    console.log("Type:", typeof data.image);
+    console.log("Is File?", data.image instanceof File);
+    console.log("Is Array?", Array.isArray(data.image));
+    console.log("Has 0 index?", data.image?.[0]);
+    console.log("======================");
 
+    setText(`✅ "${data.productName}" added successfully!`);
+    
+    try {
+        const formData = new FormData();
+        
+        // Append text fields
+        formData.append('productName', data.productName);
+        formData.append('productId', data.productId);
+        formData.append('quantity', data.quantity);
+        formData.append('price', data.price);
+        if (data.category) formData.append('category', data.category);
+        
+        // CORRECT WAY: Handle the image properly
+        let fileToUpload = null;
+        
+        if (data.image) {
+            // Case 1: It's a single File object (what your Zod schema expects)
+            if (data.image instanceof File) {
+                fileToUpload = data.image;
+                formData.append('image', data.image);
+                console.log("Appended single file:", data.image.name, data.image.type);
+            }
+            // Case 2: It's an array with a file (from multiple file input)
+            else if (Array.isArray(data.image) && data.image.length > 0 && data.image[0] instanceof File) {
+                fileToUpload = data.image[0];
+                formData.append('image', data.image[0]);
+                console.log("Appended file from array:", data.image[0].name);
+            }
+            // Case 3: It's a FileList (from regular file input)
+            else if (data.image instanceof FileList && data.image.length > 0) {
+                fileToUpload = data.image[0];
+                formData.append('image', data.image[0]);
+                console.log("Appended file from FileList:", data.image[0].name);
+            }
+            else {
+                console.error("Unexpected data.image format:", data.image);
+                throw new Error("Image format is not recognized. Please select a valid image file.");
+            }
+        } else {
+            console.error("No image in data");
+            throw new Error("Please select an image file");
+        }
+        
+        // Debug FormData
+        console.log("=== FormData Contents ===");
+        for (let [key, value] of formData.entries()) {
+            if (value instanceof File) {
+                console.log(`${key}: File - "${value.name}" (${value.type}, ${value.size} bytes)`);
+            } else {
+                console.log(`${key}: "${value}"`);
+            }
+        }
+        console.log("=========================");
+        
+        const tokenAuth = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        
+        await addingProduct(formData, tokenAuth);
+        console.log("Product added successfully");
+        
+    } catch (error) {
+        console.log("Product Not Added:", error);
+        setText(`❌ Error: ${error.message}`);
+    }
+};
   //deleteProduct
   const handleDelete = () => {
     if (!deleteInput.trim()) {
@@ -130,9 +173,9 @@ try{
       case "delete":
         return <DeleteProduct handleDelete={handleDelete} deleteInput={deleteInput} setDeleteInput={setDeleteInput} text={text} />;
       case "view":
-        return <ViewProducts products={products} filter={filter} setFilter={setFilter} />;
+        return <ViewProducts filter={filter} setFilter={setFilter} />;
       case "search":
-        return <SearchProduct searchInput={searchInput} setSearchInput={setSearchInput} searchResults={searchResults} performSearch={performSearch} />;
+        return <UpdateProduct searchInput={searchInput} setSearchInput={setSearchInput} searchResults={searchResults} performSearch={performSearch} />;
       default:
         return <p className="text-center text-muted mt-5">Select an option above to manage products.</p>;
     }
@@ -149,7 +192,7 @@ try{
           { key: "add", icon: "bi-plus-circle text-success", title: "Add Product", desc: "Add new items to the store.", btn: "btn-success" },
           { key: "delete", icon: "bi-trash3 text-danger", title: "Delete Product", desc: "Remove outdated products.", btn: "btn-danger" },
           { key: "view", icon: "bi-eye text-primary", title: "View Products", desc: "See all listed products.", btn: "btn-primary" },
-          { key: "search", icon: "bi-search text-warning", title: "Search Product", desc: "Find items by name or category.", btn: "btn-warning text-dark" },
+          { key: "search", icon: "bi-search text-warning", title: "Update Product", desc: "Update Items using Product Id", btn: "btn-warning text-dark" },
         ].map((card) => (
           <div key={card.key} className="col-12 col-sm-6 col-md-6 col-lg-3" onClick={() => setActiveSection(card.key)} style={{ cursor: "pointer" }}>
             <div className="card text-center shadow-sm border-0 p-4 h-100">
@@ -165,7 +208,7 @@ try{
       </div>
 
       {/* Dynamic Section */}
-      <div className="container mt-5">{renderSection()}</div>
+      <div className="container mt-5">{renderSection()}</div> 
     </div>
   );
 }

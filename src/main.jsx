@@ -6,12 +6,16 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import App from './App.jsx'
 import { RouterProvider } from 'react-router-dom'
 import router from './routes.jsx'
-router
+import { UserQuantityProvider } from './Context/UserQuantityContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-  <RouterProvider router={router}>
+
+  <UserQuantityProvider>
+    <RouterProvider router={router}>
     <App />
     </RouterProvider>
+  </UserQuantityProvider>
+
   </StrictMode>,
 )

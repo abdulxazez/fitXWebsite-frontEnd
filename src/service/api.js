@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url="http://localhost:5000";
+const url="https://fitxwebsite-backend.onrender.com";
 
 export const addUser = async (userData) => {
   try {
